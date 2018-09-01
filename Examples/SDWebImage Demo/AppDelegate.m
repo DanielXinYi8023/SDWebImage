@@ -4,6 +4,10 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
+ *  开启SDWebImage分析,从以下两个方面分析:
+ *  1.使用方法分析
+ *  2.源代码分析
+ *
  */
 
 #import "AppDelegate.h"
