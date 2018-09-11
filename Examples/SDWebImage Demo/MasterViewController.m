@@ -13,8 +13,8 @@
 
 @interface MyCustomTableViewCell : UITableViewCell
 
-@property (nonatomic, strong) UILabel *customTextLabel;
-@property (nonatomic, strong) FLAnimatedImageView *customImageView;
+@property (nonatomic, strong) UILabel *customTextLabel;//图片个数label
+@property (nonatomic, strong) FLAnimatedImageView *customImageView;//iOS平台使用的gif imageView
 
 @end
 
@@ -56,6 +56,7 @@
         
         // HTTP NTLM auth example
         // Add your NTLM image url to the array below and replace the credentials
+        //需要http认证的地址，设置图片下载的用户名密码 （下面第一张）
         [SDWebImageManager sharedManager].imageDownloader.username = @"httpwatch";
         [SDWebImageManager sharedManager].imageDownloader.password = @"httpwatch01";
         
@@ -78,14 +79,19 @@
         }
 
     }
+    //设置图片下载请求头 ？作用
     [SDWebImageManager.sharedManager.imageDownloader setValue:@"SDWebImage Demo" forHTTPHeaderField:@"AppName"];
+    //图片下载的执行模式。1.first-in-first-out 2.last-in-first-out
     SDWebImageManager.sharedManager.imageDownloader.executionOrder = SDWebImageDownloaderLIFOExecutionOrder;
     return self;
 }
 
+//清除缓存
 - (void)flushCache
 {
+    //清除内存缓存
     [SDWebImageManager.sharedManager.imageCache clearMemory];
+    //清除硬盘缓存
     [SDWebImageManager.sharedManager.imageCache clearDiskOnCompletion:nil];
 }
 							
@@ -118,11 +124,13 @@
     MyCustomTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[MyCustomTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        //使用runtime为UIView扩展增加属性  是图片下载指示器的模式
         cell.customImageView.sd_imageTransition = SDWebImageTransition.fadeTransition;
     }
-
+    //设置图片下载指示器是否显示
     [cell.customImageView sd_setShowActivityIndicatorView:YES];
-    [cell.customImageView sd_setIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    //设置指示器的颜色
+    [cell.customImageView sd_setIndicatorStyle:UIActivityIndicatorViewStyleWhite];
     
     cell.customTextLabel.text = [NSString stringWithFormat:@"Image #%ld", (long)indexPath.row];
     [cell.customImageView sd_setImageWithURL:[NSURL URLWithString:self.objects[indexPath.row]]
@@ -133,6 +141,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    //跳转
     NSString *largeImageURLString = [self.objects[indexPath.row] stringByReplacingOccurrencesOfString:@"small" withString:@"source"];
     NSURL *largeImageURL = [NSURL URLWithString:largeImageURLString];
     DetailViewController *detailViewController = [[DetailViewController alloc] initWithNibName:@"DetailViewController" bundle:nil];

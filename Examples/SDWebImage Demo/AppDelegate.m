@@ -7,7 +7,6 @@
  *  开启SDWebImage分析,从以下两个方面分析:
  *  1.使用方法分析
  *  2.源代码分析
- *
  */
 
 #import "AppDelegate.h"
